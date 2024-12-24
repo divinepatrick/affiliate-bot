@@ -4,8 +4,15 @@ import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/ge
 import React, { useState } from 'react';
 import axios from 'axios';
 import cors from 'cors';
+import path from 'path';
+
 
 config();
+
+
+const__dirname = path.resolve();
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;
