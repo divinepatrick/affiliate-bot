@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const Home = () => {
+  const [query, setQuery] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('/api/query', { query });
+      setResponse(res.data.response);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    }
+  };
+
   return (
     <main className="container mx-auto p-4">
       <section className="my-8 text-center relative" id="home">
@@ -158,24 +172,53 @@ const Home = () => {
           <p className="text-lg mb-8">
             Get personalized recommendations for the best and highest paid affiliate marketing platforms based on your niche and performance metrics.
           </p>
-          <form
-            id="chat-form"
-            className="flex flex-col md:flex-row md:items-center md:justify-center"
-          >
-            <input
-              id="user-input"
-              type="search"
-              placeholder="Ask me anything..."
-              className="py-2 pl-10 text-sm text-gray-700"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          <div>
+            <form
+              id="chat-form"
+              className="flex flex-col md:flex-row md:items-center md:justify-center"
+              onSubmit={handleSubmit}
             >
-              Search
-            </button>
-          </form>
+              <input
+                id="user-input"
+                type="search"
+                placeholder="Ask me anything..."
+                className="py-2 pl-10 text-sm text-gray-700"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Search
+              </button>
+            </form>
+            {response && <div className="mt-4">{response}</div>}
+          </div>
           <div id="chat-history" className="mt-8"></div>
+        </div>
+      </section>
+      <section className="my-8 text-center relative" id="contact">
+        <div className="relative z-10 px-4 py-8 md:px-8 md:py-12 lg:px-12 lg:py-16">
+          <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
+          <p className="text-lg mb-8">
+            Have any questions or want to learn more about our products? Contact us today!
+          </p>
+          <form className="max-w-2xl mx-auto">
+            <div className="mb-4">
+              <label className="block text-left mb-2" htmlFor="name">Name</label>
+              <input className="w-full px-3 py-2 border rounded" type="text" id="name" name="name" required />
+            </div>
+            <div className="mb-4">
+              <label className="block text-left mb-2" htmlFor="email">Email</label>
+              <input className="w-full px-3 py-2 border rounded" type="email" id="email" name="email" required />
+            </div>
+            <div className="mb-4">
+              <label className="block text-left mb-2" htmlFor="message">Message</label>
+              <textarea className="w-full px-3 py-2 border rounded" id="message" name="message" rows="4" required></textarea>
+            </div>
+            <button className="px-4 py-2 bg-blue-500 text-white rounded" type="submit">Send</button>
+          </form>
         </div>
       </section>
     </main>
